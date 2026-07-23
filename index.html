@@ -994,7 +994,7 @@ document.getElementById("orderForm").addEventListener("submit", function(e) {
 
 
 // ==========================================
-// CYBER CHAT SYSTEM LOGIC
+// CYBER CHAT SYSTEM LOGIC (FIXED HEADERS)
 // ==========================================
 let currentUser = "";
 let chatPollInterval = null;
@@ -1031,7 +1031,8 @@ function authChat() {
   
   fetch(scriptURL, {
     method: 'POST',
-    body: params
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
   })
   .then(res => res.json())
   .then(data => {
@@ -1047,7 +1048,10 @@ function authChat() {
       alert("AUTH FAILED: " + data.msg);
     }
   })
-  .catch(() => alert("NETWORK ERROR. TRY AGAIN."));
+  .catch((err) => {
+    console.log(err);
+    alert("NETWORK ERROR. TRY AGAIN.");
+  });
 }
 
 function sendChatMessage() {
@@ -1068,7 +1072,8 @@ function sendChatMessage() {
 
   fetch(scriptURL, {
     method: 'POST',
-    body: params
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
   }).then(() => fetchMessages());
 }
 
@@ -1079,7 +1084,7 @@ function fetchMessages() {
   .then(res => res.json())
   .then(messages => {
     let logs = document.getElementById('chat-logs');
-    logs.innerHTML = ""; // Clear existing messages
+    logs.innerHTML = ""; 
     
     messages.forEach(m => {
       let line = document.createElement('div');
@@ -1089,7 +1094,7 @@ function fetchMessages() {
       logs.appendChild(line);
     });
     
-    logs.scrollTop = logs.scrollHeight; // Auto-scroll to bottom
+    logs.scrollTop = logs.scrollHeight; 
   })
   .catch(e => console.log("Chat sync delayed."));
 }
