@@ -489,6 +489,7 @@ body {
 
 <script>
 let audioCtx;
+let isBgmRunning = false;
 let appliedBroCode = "";
 
 function createParticles() {
@@ -512,6 +513,23 @@ function initAudio() {
   }
 }
 
+function startBGM() {
+  if (isBgmRunning) return;
+  initAudio();
+  isBgmRunning = true;
+  let t = 0;
+  let notes = [110.00, 130.81, 146.83, 164.81]; // Cyberpunk Bass Arpeggio
+  
+  function loop() {
+    if (!isBgmRunning) return;
+    playTone(notes[t % 4], 'sawtooth', 0.25, 0.02);
+    if (t % 2 === 0) playTone(900, 'square', 0.04, 0.008);
+    t++;
+    setTimeout(loop, 280);
+  }
+  loop();
+}
+
 function playTone(freq, type, duration, vol = 0.04) {
   initAudio();
   if (!audioCtx || audioCtx.state !== 'running') return;
@@ -525,7 +543,7 @@ function playTone(freq, type, duration, vol = 0.04) {
   osc.start(); osc.stop(audioCtx.currentTime + duration);
 }
 
-function soundClick() { playTone(800, 'square', 0.08); }
+function soundClick() { playTone(880, 'square', 0.08); }
 function soundError() { playTone(120, 'sawtooth', 0.3, 0.08); }
 function soundWin() {
   setTimeout(() => playTone(523.25, 'sine', 0.15), 0);
@@ -534,12 +552,13 @@ function soundWin() {
   setTimeout(() => playTone(1046.50, 'sine', 0.4), 360);
 }
 function soundHack() {
-  for(let i=0; i<12; i++) { setTimeout(() => playTone(500 + (i*80), 'sawtooth', 0.04, 0.02), i*40); }
+  for(let i=0; i<12; i++) { setTimeout(() => playTone(500 + (i*90), 'sawtooth', 0.04, 0.02), i*40); }
 }
 
 // --- LAUNCHER NAVIGATION ---
 function launchArcade() {
   soundClick();
+  startBGM();
   let launcher = document.getElementById('launcher-screen');
   launcher.classList.remove('visible');
   setTimeout(() => {
@@ -552,6 +571,7 @@ function launchArcade() {
 
 function launchTea() {
   soundClick();
+  startBGM();
   let launcher = document.getElementById('launcher-screen');
   launcher.classList.remove('visible');
   setTimeout(() => {
@@ -679,6 +699,7 @@ function cancelCheckout() {
 }
 
 function toggleBkash(show) {
+  soundClick();
   let bkashField = document.getElementById('bkash-field');
   let trxInput = document.getElementById('trx-input');
   if (show) {
@@ -721,13 +742,14 @@ function authTea() {
   soundClick();
   let user = document.getElementById('chat-user').value.trim();
   let pass = document.getElementById('chat-pass').value.trim();
-  if (!user || !pass) { alert("ENTER USERNAME & PASS"); return; }
+  if (!user || !pass) { soundError(); alert("ENTER USERNAME & PASS"); return; }
 
   let params = new URLSearchParams({ action: "chat_auth", username: user, password: pass });
   fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })
   .then(res => res.json())
   .then(data => {
     if (data.status === "success") {
+      soundWin();
       currentUser = user.toUpperCase();
       document.getElementById('active-chat-user').innerText = currentUser;
       document.getElementById('chat-auth-box').style.display = "none";
@@ -738,7 +760,7 @@ function authTea() {
       soundError();
       alert("AUTH FAILED: " + data.msg);
     }
-  }).catch(() => alert("NETWORK ERROR"));
+  }).catch(() => { soundError(); alert("NETWORK ERROR"); });
 }
 
 function sendChatMessage() {
