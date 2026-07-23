@@ -18,7 +18,7 @@
   --accent-pink: #ff0055;
   --accent-yellow: #ffe600;
   --accent-green: #00ff66;
-  --card-bg: rgba(10, 14, 28, 0.88);
+  --card-bg: rgba(10, 14, 28, 0.90);
   --card-border: #00f0ff;
   --input-bg: rgba(0, 0, 0, 0.9);
   --font-main: 'Share Tech Mono', monospace;
@@ -34,7 +34,7 @@
   --accent-pink: #e11d48;
   --accent-yellow: #ca8a04;
   --accent-green: #16a34a;
-  --card-bg: rgba(255, 255, 255, 0.94);
+  --card-bg: rgba(255, 255, 255, 0.95);
   --card-border: #0284c7;
   --input-bg: #f8fafc;
   --shadow-cyber: 0 15px 35px rgba(0, 0, 0, 0.12), inset 0 0 15px rgba(2, 132, 199, 0.05);
@@ -73,13 +73,13 @@ body {
   box-shadow: 0 0 30px var(--accent-yellow); transform: scale(1.1) rotate(-2deg);
 }
 
-/* --- SCREENS CONFIGURATION WITH ENHANCED ANIMATIONS --- */
+/* --- SCREENS CONFIGURATION WITH SMOOTH FLUID TRANSITIONS --- */
 .screen-layer {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: transparent; z-index: 5000; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
-#launcher-screen, #gate, #checkout-screen, #success-screen, #chat-screen { display: none; opacity: 0; transform: scale(0.9) translateY(30px); filter: blur(8px); }
+#launcher-screen, #gate, #checkout-screen, #success-screen, #chat-screen { display: none; opacity: 0; transform: scale(0.92) translateY(25px); filter: blur(6px); }
 #launcher-screen.visible, #gate.visible, #checkout-screen.visible, #success-screen.visible, #chat-screen.visible { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 
 #launcher-screen { display: flex; opacity: 1; transform: scale(1); filter: blur(0); }
@@ -94,7 +94,7 @@ body {
 }
 @keyframes boxPulse {
   0% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0, 240, 255, 0.05); }
-  100% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.45), inset 0 0 25px rgba(0, 240, 255, 0.15); }
+  100% { box-shadow: 0 0 45px rgba(0, 240, 255, 0.45), inset 0 0 25px rgba(0, 240, 255, 0.15); }
 }
 
 /* --- CYBER BUTTONS --- */
@@ -234,7 +234,7 @@ body {
 </head>
 <body>
 
-<!-- Audio Control Toggle -->
+<!-- Audio Control Toggle Button -->
 <button id="audioToggleBtn" class="audio-toggle-btn" onclick="toggleAudio()">[ AUDIO: OFF ]</button>
 
 <!-- Canvas for Hyper-Dynamic Background Patterns, Waves & Sparkles -->
@@ -370,9 +370,16 @@ body {
   <div class="cyber-box" style="width: 95%; max-width: 550px; padding: 1.8rem 1.2rem;">
     <div class="glitch-title" style="color: var(--accent-cyan); font-size: 14px;">☕ SECURE CYBER TEA LOUNGE ☕</div>
     
-    <div id="chat-auth-box" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-      <input type="text" id="chat-user" class="cyber-input" placeholder="USERNAME..." autocomplete="off" />
-      <input type="password" id="chat-pass" class="cyber-input" placeholder="ACCESS PIN..." autocomplete="off" />
+    <!-- Instructions Banner -->
+    <div style="font-size: 10px; color: var(--accent-yellow); background: rgba(255,230,0,0.08); border: 1px solid var(--accent-yellow); padding: 10px; border-radius: 4px; margin-bottom: 15px; line-height: 1.6; font-weight: 700; text-align: left;">
+      > TEA LOUNGE PROTOCOL:<br>
+      • Use any custom username & password you like.<br>
+      • Take a sip of tea from the lounge and drop your messages safely in the mesh network.
+    </div>
+
+    <div id="chat-auth-box" style="display: flex; flex-direction: column; gap: 12px; margin-top: 5px;">
+      <input type="text" id="chat-user" class="cyber-input" placeholder="ANY USERNAME..." autocomplete="off" />
+      <input type="password" id="chat-pass" class="cyber-input" placeholder="ANY PASSWORD..." autocomplete="off" />
       <button class="cyber-btn yellow" onclick="authTea()">BREW CONNECTION</button>
       <button class="cyber-btn" onclick="returnToLauncher()" style="background: transparent; border-color: var(--text-muted); color: var(--text);">DISCONNECT</button>
     </div>
@@ -383,8 +390,8 @@ body {
         <span>TABLE / NODE: <input id="chat-target" value="Global" style="background:none; border:none; color:var(--accent-cyan); font-family:var(--font-cyber); width:80px; text-align:right; outline:none;" /></span>
       </div>
 
-      <div id="chat-logs" style="height: 230px; overflow-y: auto; background: var(--input-bg); border: 2px dashed var(--accent-cyan); padding: 12px; font-family: var(--font-main); font-size: 12px; text-align: left; display: flex; flex-direction: column; gap: 8px; border-radius: 4px;">
-        <div style="color: var(--text-muted);">>> ENCRYPTED TEA MESH ACTIVE...</div>
+      <div id="chat-logs" style="height: 200px; overflow-y: auto; background: var(--input-bg); border: 2px dashed var(--accent-cyan); padding: 12px; font-family: var(--font-main); font-size: 12px; text-align: left; display: flex; flex-direction: column; gap: 8px; border-radius: 4px;">
+        <div style="color: var(--text-muted);">>> ENCRYPTED TEA MESH ACTIVE... SIP AND CHAT...</div>
       </div>
 
       <div class="input-row" style="margin-bottom: 0;">
@@ -527,7 +534,7 @@ const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
 
 let width, height;
-let mouse = { x: -1000, y: -1000, radius: 260 };
+let mouse = { x: -1000, y: -1000, radius: 280 };
 let rippleRadius = 0;
 
 function resizeCanvas() {
@@ -540,22 +547,21 @@ resizeCanvas();
 window.addEventListener('mousemove', (e) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
-  rippleRadius = 15; // trigger ripple pulse
+  rippleRadius = 15;
 });
 window.addEventListener('mouseleave', () => {
   mouse.x = -1000;
   mouse.y = -1000;
 });
 
-// Dynamic floating data particles & sparkles
 let particles = [];
-for(let i=0; i<70; i++) {
+for(let i=0; i<85; i++) {
   particles.push({
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
-    size: Math.random() * 2.5 + 0.8,
-    speedX: (Math.random() - 0.5) * 0.6,
-    speedY: Math.random() * 0.8 + 0.3,
+    size: Math.random() * 2.8 + 0.8,
+    speedX: (Math.random() - 0.5) * 0.8,
+    speedY: Math.random() * 1.0 + 0.4,
     alpha: Math.random(),
     pulse: Math.random() * 0.04 + 0.01
   });
@@ -571,21 +577,20 @@ function drawDynamicBackground() {
   let spacing = 55;
   let cols = Math.floor(width / spacing) + 2;
   let rows = Math.floor(height / spacing) + 2;
-  let time = Date.now() * 0.0015;
+  let time = Date.now() * 0.0018;
 
   if (rippleRadius > 0 && rippleRadius < mouse.radius) {
-    rippleRadius += 4.5;
+    rippleRadius += 5;
   }
 
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = 1;
 
-  // Render Horizontal Waves that bend around cursor
   for (let r = 0; r < rows; r++) {
     ctx.beginPath();
     for (let c = 0; c < cols; c++) {
       let x = c * spacing;
-      let y = r * spacing + Math.sin(c * 0.4 + time) * 6; // Dynamic flowing sine wave
+      let y = r * spacing + Math.sin(c * 0.4 + time) * 8;
 
       let dx = x - mouse.x;
       let dy = y - mouse.y;
@@ -594,9 +599,8 @@ function drawDynamicBackground() {
       if (dist < mouse.radius) {
         let force = (1 - dist / mouse.radius);
         let angle = Math.atan2(dy, dx);
-        // Elastic smooth magnetic repulsion/bending
-        x += Math.cos(angle) * force * 35;
-        y += Math.sin(angle) * force * 35;
+        x += Math.cos(angle) * force * 40;
+        y += Math.sin(angle) * force * 40;
       }
 
       if (c === 0) ctx.moveTo(x, y);
@@ -605,11 +609,10 @@ function drawDynamicBackground() {
     ctx.stroke();
   }
 
-  // Render Vertical Waves
   for (let c = 0; c < cols; c++) {
     ctx.beginPath();
     for (let r = 0; r < rows; r++) {
-      let x = c * spacing + Math.cos(r * 0.4 + time) * 6;
+      let x = c * spacing + Math.cos(r * 0.4 + time) * 8;
       let y = r * spacing;
 
       let dx = x - mouse.x;
@@ -619,8 +622,8 @@ function drawDynamicBackground() {
       if (dist < mouse.radius) {
         let force = (1 - dist / mouse.radius);
         let angle = Math.atan2(dy, dx);
-        x += Math.cos(angle) * force * 35;
-        y += Math.sin(angle) * force * 35;
+        x += Math.cos(angle) * force * 40;
+        y += Math.sin(angle) * force * 40;
       }
 
       if (r === 0) ctx.moveTo(x, y);
@@ -629,16 +632,14 @@ function drawDynamicBackground() {
     ctx.stroke();
   }
 
-  // Radiating Magnification Ripple Ring following cursor movement
   if (mouse.x > 0 && mouse.y > 0 && rippleRadius > 5) {
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, rippleRadius, 0, Math.PI * 2);
-    ctx.strokeStyle = rippleColor + (1 - rippleRadius / mouse.radius) * 0.5 + ')';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = rippleColor + (1 - rippleRadius / mouse.radius) * 0.6 + ')';
+    ctx.lineWidth = 2.5;
     ctx.stroke();
   }
 
-  // Render Sparkles & Floating Particles
   particles.forEach(p => {
     p.x += p.speedX;
     p.y -= p.speedY;
