@@ -3,38 +3,36 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>SILLY SOCKS | ARCADE & CYBER CHAT</title>
+<title>CYBER-ARCADE | CYBER TEA NETWORK</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:ital,wght@0,400;0,800;0,900;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
 :root {
-  --bg: #0b0c10;
-  --text: #ffffff;
-  --text-muted: #aaaaaa;
-  --accent-1: #ff00ff; 
-  --accent-2: #00ffff; 
-  --accent-3: #ffff00; 
-  --card-bg: rgba(20, 10, 30, 0.85);
-  --card-border: #ff00ff;
-  --grid-line: rgba(0, 255, 255, 0.4);
-  --grid-glow: rgba(255, 0, 255, 0.3);
-  --font-main: 'Montserrat', sans-serif;
-  --font-retro: 'Press Start 2P', cursive;
-  --shadow-retro: 0 0 10px var(--accent-1), 0 0 20px var(--accent-2);
+  --bg: #03030a;
+  --text: #e0fbfc;
+  --text-muted: #8892b0;
+  --accent-cyan: #00f0ff;
+  --accent-pink: #ff0055;
+  --accent-yellow: #ffe600;
+  --accent-green: #00ff66;
+  --card-bg: rgba(6, 6, 20, 0.92);
+  --card-border: #00f0ff;
+  --font-main: 'Share Tech Mono', monospace;
+  --font-cyber: 'Orbitron', sans-serif;
+  --shadow-cyber: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
+  --shadow-pink: 0 0 25px rgba(255, 0, 85, 0.4);
 }
 
 [data-theme="light"] {
-  --bg: #f4f4f4;
-  --text: #111111;
-  --text-muted: #555555;
-  --accent-1: #ff007f; 
-  --accent-2: #00e5ff; 
-  --accent-3: #ffea00; 
-  --card-bg: #ffffff;
-  --card-border: #111111;
-  --grid-line: rgba(0, 0, 0, 0.1);
-  --grid-glow: transparent;
-  --shadow-retro: 8px 8px 0px var(--card-border);
+  --bg: #0b0c16;
+  --text: #ffffff;
+  --text-muted: #aaccff;
+  --accent-cyan: #00e5ff;
+  --accent-pink: #ff007f;
+  --accent-yellow: #ffea00;
+  --accent-green: #00e655;
+  --card-bg: rgba(15, 20, 40, 0.95);
+  --card-border: #00e5ff;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,219 +44,299 @@ body {
   overflow-x: hidden;
   height: 100vh;
   overflow-y: hidden;
-  transition: background-color 0.5s, color 0.5s;
+  transition: background-color 0.5s;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* --- 80s PERSPECTIVE GRID --- */
-.synth-grid {
-  position: fixed; bottom: -20vh; left: -50vw; width: 200vw; height: 70vh;
+/* --- CRT SCANLINE & FLICKER OVERLAY --- */
+.crt-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 99999;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 3px, 4px 100%;
+}
+
+/* --- CYBERPUNK 3D PERSPECTIVE MATRIX GRID --- */
+.cyber-grid {
+  position: fixed; bottom: -30vh; left: -50vw; width: 200vw; height: 80vh;
   background-image: 
-    linear-gradient(var(--grid-line) 2px, transparent 2px),
-    linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
-  background-size: 50px 50px;
-  transform: perspective(600px) rotateX(70deg);
+    linear-gradient(rgba(0, 240, 255, 0.2) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 0, 85, 0.2) 2px, transparent 2px);
+  background-size: 60px 60px;
+  transform: perspective(500px) rotateX(75deg);
   transform-origin: top; z-index: -2;
-  animation: gridScroll 2s linear infinite;
-  box-shadow: 0 -40px 100px var(--grid-glow);
+  animation: gridMove 3s linear infinite;
   pointer-events: none;
 }
-@keyframes gridScroll {
-  0% { transform: perspective(600px) rotateX(70deg) translateY(0); }
-  100% { transform: perspective(600px) rotateX(70deg) translateY(50px); }
+@keyframes gridMove {
+  0% { transform: perspective(500px) rotateX(75deg) translateY(0); }
+  100% { transform: perspective(500px) rotateX(75deg) translateY(60px); }
 }
 
-.memphis-shapes { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
-[data-theme="light"] .memphis-shapes { opacity: 1; }
-.shape { position: absolute; border: 4px solid var(--card-border); }
-.circle { border-radius: 50%; width: 80px; height: 80px; background: var(--accent-3); top: 10%; left: 5%; animation: float 10s infinite alternate; }
-.triangle { width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 80px solid var(--accent-1); border-top: none; background: transparent; top: 70%; right: 10%; animation: float 12s infinite alternate-reverse; }
-.squiggle { width: 120px; height: 15px; background: repeating-linear-gradient(45deg, var(--accent-2), var(--accent-2) 10px, transparent 10px, transparent 20px); top: 25%; right: 15%; animation: spin 15s linear infinite; }
+/* --- HOLOGRAPHIC SCANNER LINES --- */
+.scanner-line {
+  position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+  background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan);
+  opacity: 0.7; pointer-events: none; z-index: 99998;
+  animation: scanDown 6s linear infinite;
+}
+@keyframes scanDown {
+  0% { transform: translateY(-10vh); }
+  100% { transform: translateY(110vh); }
+}
 
-@keyframes float { 0% {transform: translateY(0) rotate(0deg);} 100% {transform: translateY(30px) rotate(15deg);} }
-@keyframes spin { 100% {transform: rotate(360deg);} }
+/* --- FLOATING CYBER PARTICLES --- */
+.cyber-particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
+.particle { position: absolute; width: 3px; height: 3px; background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); animation: floatParticle linear infinite; }
+@keyframes floatParticle {
+  0% { transform: translateY(105vh) translateX(0); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(-5vh) translateX(50px); opacity: 0; }
+}
 
 /* --- SCREENS CONFIGURATION --- */
 .screen-layer {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--bg); z-index: 5000; transition: all 0.6s cubic-bezier(0.8, -0.2, 0.2, 1.5);
+  background: var(--bg); z-index: 5000; transition: all 0.5s cubic-bezier(0.1, 1, 0.1, 1);
 }
-#launcher-screen, #gate, #checkout-screen, #success-screen, #chat-screen { display: none; opacity: 0; transform: scale(0.8); }
-#launcher-screen.visible, #gate.visible, #checkout-screen.visible, #success-screen.visible, #chat-screen.visible { opacity: 1; transform: scale(1); }
+#launcher-screen, #gate, #checkout-screen, #success-screen, #chat-screen { display: none; opacity: 0; transform: scale(0.9) translateY(20px); filter: blur(5px); }
+#launcher-screen.visible, #gate.visible, #checkout-screen.visible, #success-screen.visible, #chat-screen.visible { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 
-/* --- SCREEN 1: LAUNCHER (CHOOSE PATH - DEFAULT ON LOAD) --- */
-#launcher-screen { display: flex; opacity: 1; transform: scale(1); }
-.launcher-title { font-family: var(--font-retro); font-size: clamp(18px, 4vw, 26px); color: var(--accent-3); text-shadow: 0 0 15px var(--accent-3); margin-bottom: 25px; text-align: center; line-height: 1.5; }
+#launcher-screen { display: flex; opacity: 1; transform: scale(1); filter: blur(0); }
 
-/* --- REUSABLE RETRO BOX --- */
-.retro-box { width: 90%; max-width: 500px; text-align: center; padding: 2.5rem 1.5rem; background: var(--card-bg); border: 4px solid var(--card-border); box-shadow: var(--shadow-retro); position: relative; margin: 0 auto; }
-.retro-box::before { content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; border: 1px dashed var(--accent-2); pointer-events: none; }
-.retro-btn { padding: 12px 15px; background: var(--accent-1); color: #fff; border: 3px solid var(--card-border); font-family: var(--font-retro); font-size: 10px; cursor: pointer; transition: all 0.2s; box-shadow: 4px 4px 0 var(--accent-2); text-transform: uppercase; margin: 5px 0; width: 100%; display: block; }
-.retro-btn:hover { background: var(--accent-2); color: #000; box-shadow: 4px 4px 0 var(--accent-1); transform: translate(-2px, -2px); }
-.retro-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 transparent; }
+/* --- HUD CYBER BOX --- */
+.cyber-box {
+  width: 90%; max-width: 520px; text-align: center; padding: 2.5rem 1.8rem;
+  background: var(--card-bg); border: 2px solid var(--card-border);
+  box-shadow: var(--shadow-cyber); position: relative; margin: 0 auto;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+}
+.cyber-box::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  animation: borderScan 3s ease-in-out infinite;
+}
+@keyframes borderScan {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
 
-/* --- GATE / HACKING --- */
-.lock-icon { font-size: 40px; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--accent-1)); transition: all 0.5s ease; }
-.gate-title { font-family: var(--font-retro); font-size: 16px; line-height: 1.5; margin-bottom: 15px; color: var(--accent-1); text-shadow: 2px 2px 0 #000; transition: color 0.5s ease; }
-.gate-sub { font-size: 11px; font-weight: 800; font-family: var(--font-retro); color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8;}
+/* --- CYBER BUTTONS --- */
+.cyber-btn {
+  padding: 14px 20px; background: rgba(0, 240, 255, 0.1); color: var(--text);
+  border: 2px solid var(--accent-cyan); font-family: var(--font-cyber); font-size: 11px;
+  font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); text-transform: uppercase; margin: 8px 0; width: 100%;
+  position: relative; overflow: hidden; letter-spacing: 2px;
+}
+.cyber-btn::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+  transition: 0.5s;
+}
+.cyber-btn:hover::after { left: 100%; }
+.cyber-btn:hover {
+  background: var(--accent-cyan); color: #000; box-shadow: 0 0 25px var(--accent-cyan);
+  transform: translateY(-2px);
+}
+.cyber-btn:active { transform: translateY(1px); }
 
-.input-row { display: flex; flex-direction: row; gap: 10px; margin-bottom: 15px; justify-content: center; align-items: center;}
-.retro-input, .retro-select { flex: 1; min-width: 0; padding: 12px; background: #000; border: 3px solid var(--card-border); color: #0f0; font-family: var(--font-retro); font-size: 10px; outline: none; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); text-transform: uppercase; width: 100%;}
-.retro-input:focus, .retro-select:focus { border-color: var(--accent-2); box-shadow: inset 0 0 15px var(--accent-2); }
-#errMsg { font-family: var(--font-retro); font-size: 10px; color: var(--accent-1); min-height: 20px; display: none; margin-top: 10px; }
+.cyber-btn.pink {
+  border-color: var(--accent-pink); background: rgba(255, 0, 85, 0.1);
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
+}
+.cyber-btn.pink:hover {
+  background: var(--accent-pink); color: #fff; box-shadow: 0 0 25px var(--accent-pink);
+}
 
-/* --- CHECKOUT & SUCCESS UI --- */
-#checkout-screen { overflow-y: auto; padding: 20px 0; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
-.checkout-form { display: flex; flex-direction: column; gap: 12px; text-align: left; margin-top: 15px;}
-.checkout-form label { font-size: 9px; font-family: var(--font-retro); color: var(--accent-2); margin-top: 6px;}
-.tc-box { height: 110px; overflow-y: auto; background: #000; border: 2px dashed var(--accent-1); padding: 10px; font-size: 9px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; -webkit-overflow-scrolling: touch;}
-.tc-box strong { color: var(--accent-1); font-weight: 900;}
-.checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-size: 10px; font-weight: 800; line-height: 1.4; color: #fff;}
-.checkbox-row input { appearance: none; width: 18px; height: 18px; border: 2px solid var(--card-border); background: var(--bg); cursor: pointer; min-width: 18px; margin-top: 2px;}
-.checkbox-row input:checked { background: var(--accent-3); border-color: var(--accent-3); box-shadow: inset 0 0 0 2px #000; }
-.radio-group { display: flex; gap: 15px; flex-wrap: wrap; background: #000; padding: 10px; border: 2px solid var(--card-border); }
-.radio-group label { display: flex; align-items: center; gap: 8px; color: #fff; font-family: var(--font-main); font-size: 11px; margin-top: 0; font-weight: 800; cursor: pointer;}
+.cyber-btn.yellow {
+  border-color: var(--accent-yellow); background: rgba(255, 230, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 230, 0, 0.2);
+}
+.cyber-btn.yellow:hover {
+  background: var(--accent-yellow); color: #000; box-shadow: 0 0 25px var(--accent-yellow);
+}
 
-.bkash-info-box { background: rgba(255, 0, 127, 0.15); border: 2px dashed var(--accent-1); padding: 12px; border-radius: 4px; margin-top: 5px; display: flex; flex-direction: column; gap: 8px; }
-.bkash-number { font-family: var(--font-retro); font-size: 11px; color: var(--accent-3); text-shadow: 0 0 8px var(--accent-3); letter-spacing: 1px; }
+/* --- GLITCH TITLE EFFECT --- */
+.glitch-title {
+  font-family: var(--font-cyber); font-size: clamp(16px, 4vw, 24px);
+  color: var(--accent-cyan); text-shadow: 0 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-pink);
+  margin-bottom: 20px; line-height: 1.6; position: relative; animation: glitchAnim 4s infinite;
+}
+@keyframes glitchAnim {
+  0% { text-shadow: 0 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-pink); }
+  2% { text-shadow: -2px 2px 0 var(--accent-yellow), 2px -2px 0 var(--accent-pink); transform: skewX(-5deg); }
+  4% { text-shadow: 0 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-pink); transform: skewX(0deg); }
+  90% { text-shadow: 0 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-pink); }
+  92% { text-shadow: 2px -2px 0 var(--accent-cyan), -2px 2px 0 var(--accent-yellow); transform: scale(1.02); }
+  94% { text-shadow: 0 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-pink); transform: scale(1); }
+  100% { text-shadow: 0 0 10px var(--accent-cyan), 2px 2px 0 var(--accent-pink); }
+}
 
-.stat-row { font-family: var(--font-retro); font-size: 10px; margin-bottom: 15px; color: var(--accent-2); line-height: 1.5; text-align: left; }
-.stat-val { color: #0f0; text-shadow: 0 0 8px #0f0; }
-.score-tally { font-family: var(--font-retro); font-size: 24px; color: var(--accent-3); margin: 30px 0; text-shadow: 0 0 15px var(--accent-3); letter-spacing: 2px; }
-.blink-text { animation: blink 1s steps(2, start) infinite; }
-@keyframes blink { to { visibility: hidden; } }
+/* --- INPUTS & FORMS --- */
+.cyber-input, .cyber-select {
+  flex: 1; min-width: 0; padding: 14px; background: rgba(0, 0, 0, 0.8);
+  border: 2px solid var(--card-border); color: var(--accent-green);
+  font-family: var(--font-main); font-size: 13px; outline: none;
+  box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.1); text-transform: uppercase; width: 100%;
+  transition: all 0.3s;
+}
+.cyber-input:focus, .cyber-select:focus {
+  border-color: var(--accent-yellow); box-shadow: inset 0 0 15px rgba(255, 230, 0, 0.3), 0 0 10px var(--accent-yellow);
+}
+
+.input-row { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; }
+.lock-icon { font-size: 45px; margin-bottom: 15px; filter: drop-shadow(0 0 15px var(--accent-pink)); animation: pulseIcon 2s infinite alternate; }
+@keyframes pulseIcon { 0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--accent-pink)); } 100% { transform: scale(1.1); filter: drop-shadow(0 0 25px var(--accent-cyan)); } }
+
+.gate-sub { font-size: 11px; font-family: var(--font-main); color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8; letter-spacing: 1px; }
+
+/* --- CHECKOUT SPECIFICS --- */
+#checkout-screen { overflow-y: auto; padding: 25px 0; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+.checkout-form { display: flex; flex-direction: column; gap: 12px; text-align: left; margin-top: 15px; }
+.checkout-form label { font-size: 10px; font-family: var(--font-cyber); color: var(--accent-cyan); margin-top: 6px; letter-spacing: 1px; }
+.tc-box { height: 110px; overflow-y: auto; background: rgba(0,0,0,0.9); border: 2px dashed var(--accent-pink); padding: 12px; font-size: 10px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+.tc-box strong { color: var(--accent-pink); }
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; font-weight: 700; line-height: 1.4; color: #fff; cursor: pointer; }
+.checkbox-row input { appearance: none; width: 18px; height: 18px; border: 2px solid var(--card-border); background: var(--bg); cursor: pointer; min-width: 18px; margin-top: 2px; }
+.checkbox-row input:checked { background: var(--accent-yellow); border-color: var(--accent-yellow); box-shadow: inset 0 0 0 3px #000; }
+.radio-group { display: flex; gap: 15px; flex-wrap: wrap; background: rgba(0,0,0,0.8); padding: 12px; border: 2px solid var(--card-border); }
+.radio-group label { display: flex; align-items: center; gap: 8px; color: #fff; font-family: var(--font-main); font-size: 12px; margin-top: 0; cursor: pointer; }
+
+.bkash-info-box { background: rgba(255, 0, 85, 0.1); border: 2px dashed var(--accent-pink); padding: 12px; margin-top: 5px; display: flex; flex-direction: column; gap: 8px; }
+.bkash-number { font-family: var(--font-cyber); font-size: 11px; color: var(--accent-yellow); text-shadow: 0 0 8px var(--accent-yellow); letter-spacing: 1px; }
+
+.stat-row { font-family: var(--font-main); font-size: 11px; margin-bottom: 15px; color: var(--accent-cyan); line-height: 1.5; text-align: left; letter-spacing: 1px; }
+.stat-val { color: var(--accent-green); text-shadow: 0 0 8px var(--accent-green); }
+.score-tally { font-family: var(--font-cyber); font-size: 26px; color: var(--accent-yellow); margin: 30px 0; text-shadow: 0 0 20px var(--accent-yellow); letter-spacing: 3px; }
 
 /* --- CATALOG UI --- */
-#catalog { display: none; min-height: 100vh; opacity: 0; transform: translateY(100px); transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1); padding-bottom: 50px; z-index: 10; position: relative;}
+#catalog { display: none; min-height: 100vh; opacity: 0; transform: translateY(50px); transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1); padding-bottom: 50px; z-index: 10; position: relative; }
 #catalog.visible { opacity: 1; transform: translateY(0); }
 
-.cat-header { background: var(--card-bg); border-bottom: 4px solid var(--card-border); padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-retro); }
-.header-logo { font-family: var(--font-retro); font-size: clamp(16px, 4vw, 20px); color: var(--accent-2); text-shadow: 2px 2px 0 var(--accent-1); cursor: pointer; }
+.cat-header { background: var(--card-bg); border-bottom: 3px solid var(--accent-cyan); padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 5px 25px rgba(0,240,255,0.2); }
+.header-logo { font-family: var(--font-cyber); font-size: clamp(14px, 3vw, 18px); color: var(--accent-cyan); text-shadow: 0 0 10px var(--accent-cyan); cursor: pointer; letter-spacing: 2px; }
 
-.welcome-pill { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border: 2px solid var(--accent-3); padding: 8px 12px; font-family: var(--font-retro); font-size: 10px; color: var(--accent-3); background: #000; }
-.theme-toggle-btn { background: var(--bg); color: var(--text); font-weight: 900; font-family: var(--font-retro); font-size: 8px; text-transform: uppercase; cursor: pointer; border: 2px solid var(--accent-3); padding: 6px 10px; box-shadow: 2px 2px 0 var(--accent-3); transition: all 0.2s; margin: 0; }
-.theme-toggle-btn:active { transform: translate(2px, 2px); box-shadow: none; }
-.theme-toggle-btn:hover { background: var(--accent-3); color: #000; }
+.welcome-pill { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border: 2px solid var(--accent-yellow); padding: 8px 14px; font-family: var(--font-cyber); font-size: 10px; color: var(--accent-yellow); background: rgba(0,0,0,0.8); box-shadow: 0 0 10px rgba(255,230,0,0.2); }
+.theme-toggle-btn { background: var(--bg); color: var(--text); font-weight: 700; font-family: var(--font-cyber); font-size: 8px; text-transform: uppercase; cursor: pointer; border: 2px solid var(--accent-yellow); padding: 6px 12px; box-shadow: 2px 2px 0 var(--accent-yellow); transition: all 0.2s; margin: 0; letter-spacing: 1px; }
+.theme-toggle-btn:hover { background: var(--accent-yellow); color: #000; box-shadow: 0 0 15px var(--accent-yellow); }
 
-.ticker-wrap { width: 100%; overflow: hidden; background: #000; color: var(--accent-3); padding: 8px 0; font-family: var(--font-retro); font-size: 10px; border-bottom: 2px dashed var(--accent-3); white-space: nowrap; }
-.ticker { display: inline-block; white-space: nowrap; animation: ticker 25s linear infinite; }
-.ticker span { margin-right: 30px; }
-@keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+.ticker-wrap { width: 100%; overflow: hidden; background: #000; color: var(--accent-yellow); padding: 10px 0; font-family: var(--font-cyber); font-size: 10px; border-bottom: 2px dashed var(--accent-yellow); white-space: nowrap; box-shadow: inset 0 0 15px rgba(255,230,0,0.2); }
+.ticker { display: inline-block; white-space: nowrap; animation: tickerAnim 30s linear infinite; }
+.ticker span { margin-right: 40px; }
+@keyframes tickerAnim { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
-.disc-bar { background: var(--accent-1); padding: 10px 1rem; text-align: center; font-size: 10px; font-family: var(--font-retro); color: #fff; line-height: 1.6; border-bottom: 4px solid #000; }
+.disc-bar { background: var(--accent-pink); padding: 12px 1rem; text-align: center; font-size: 11px; font-family: var(--font-cyber); color: #fff; line-height: 1.6; border-bottom: 3px solid #000; box-shadow: 0 0 20px var(--accent-pink); letter-spacing: 1px; }
 
 .cat-body { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem 0; }
-.section-label { font-family: var(--font-retro); font-size: 14px; color: var(--text); margin-bottom: 2rem; text-shadow: 2px 2px 0 var(--accent-1); line-height: 1.4; }
+.section-label { font-family: var(--font-cyber); font-size: 14px; color: var(--text); margin-bottom: 2rem; text-shadow: 0 0 10px var(--accent-cyan); letter-spacing: 2px; }
 
 .cam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
-.cam-card { background: var(--card-bg); border: 4px solid var(--card-border); position: relative; transition: all 0.2s ease; box-shadow: 6px 6px 0 var(--accent-1); }
-@media (hover: hover) { .cam-card:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0 var(--accent-2); } .cam-card:hover .cam-img { transform: scale(1.08); filter: contrast(110%); } }
+.cam-card { background: var(--card-bg); border: 2px solid var(--card-border); position: relative; transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 5px 5px 0 rgba(0, 240, 255, 0.3); }
+.cam-card:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2); border-color: var(--accent-yellow); }
 
-.img-wrapper { width: 100%; height: 200px; border-bottom: 4px solid var(--card-border); background: #ffffff; overflow: hidden; position: relative;}
-.cam-img { width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform 0.5s; }
-.stock-tag { position: absolute; top: 10px; right: 10px; background: var(--accent-3); color: #000; font-family: var(--font-retro); font-size: 8px; padding: 6px 10px; border: 2px solid #000; z-index: 10;}
+.img-wrapper { width: 100%; height: 210px; border-bottom: 2px solid var(--card-border); background: #080812; overflow: hidden; position: relative; }
+.cam-img { width: 100%; height: 100%; object-fit: contain; padding: 15px; transition: transform 0.5s ease; }
+.cam-card:hover .cam-img { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--accent-cyan)); }
+.stock-tag { position: absolute; top: 10px; right: 10px; background: var(--accent-yellow); color: #000; font-family: var(--font-cyber); font-size: 8px; padding: 6px 10px; border: 1px solid #000; z-index: 10; font-weight: 700; box-shadow: 0 0 8px var(--accent-yellow); }
 
-.cam-info { padding: 15px; }
-.cam-name { font-family: var(--font-retro); font-size: 12px; margin-bottom: 10px; color: var(--accent-2); text-shadow: 1px 1px 0 #000; line-height: 1.4;}
-.cam-vibe { font-size: 13px; font-weight: 900; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase;}
-.cam-perks { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; background: #000; padding: 12px; border: 2px dashed var(--accent-1); color: #fff;}
-.perk { font-size: 11px; font-weight: 700; font-family: var(--font-main); letter-spacing: 1px;}
+.cam-info { padding: 18px; }
+.cam-name { font-family: var(--font-cyber); font-size: 13px; margin-bottom: 8px; color: var(--accent-cyan); text-shadow: 0 0 5px rgba(0,240,255,0.5); letter-spacing: 1px; }
+.cam-vibe { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+.cam-perks { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.6); padding: 10px; border: 1px dashed var(--accent-pink); color: var(--accent-green); }
+.perk { font-size: 10px; font-family: var(--font-main); letter-spacing: 1px; }
 
 .variant-toggle { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-.toggle-opt { font-size: 12px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; text-transform: uppercase; }
+.toggle-opt { font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 10px; cursor: pointer; text-transform: uppercase; color: var(--text-muted); }
 .toggle-opt input { appearance: none; width: 14px; height: 14px; border: 2px solid var(--card-border); background: var(--bg); cursor: pointer; position: relative; border-radius: 0; min-width: 14px; }
-.toggle-opt input:checked { background: var(--accent-2); border-color: var(--accent-2); box-shadow: 2px 2px 0 var(--accent-1); }
+.toggle-opt input:checked { background: var(--accent-cyan); border-color: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
 
-.price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 15px; padding-top: 15px; border-top: 2px solid var(--card-border); flex-wrap: wrap;}
-.old-price { font-size: 13px; color: var(--text-muted); text-decoration: line-through; font-weight: 900; }
-.new-price { font-family: var(--font-retro); font-size: 16px; color: var(--accent-3); text-shadow: 1px 1px 0 #000;}
-.disc-tag { font-family: var(--font-retro); font-size: 8px; background: var(--accent-1); padding: 4px 6px; color: #fff; border: 1px solid #000; }
+.price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); flex-wrap: wrap; }
+.old-price { font-size: 12px; color: var(--text-muted); text-decoration: line-through; font-weight: 700; }
+.new-price { font-family: var(--font-cyber); font-size: 15px; color: var(--accent-yellow); text-shadow: 0 0 8px rgba(255,230,0,0.6); }
+.disc-tag { font-family: var(--font-cyber); font-size: 7px; background: var(--accent-pink); padding: 4px 6px; color: #fff; box-shadow: 0 0 8px var(--accent-pink); }
 
-.buy-btn { width: 100%; padding: 15px; background: var(--accent-1); color: #fff; border: 3px solid var(--card-border); font-family: var(--font-retro); font-size: 12px; cursor: pointer; box-shadow: 4px 4px 0 var(--card-border); transition: all 0.2s; }
-.buy-btn:hover { background: var(--accent-2); color: #000; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--card-border); }
-.buy-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 transparent; }
+.page-nav { display: flex; gap: 10px; padding: 0 1rem; margin-top: 2.5rem; justify-content: center; flex-wrap: wrap; }
+.page-tab { background: var(--card-bg); border: 2px solid var(--card-border); padding: 12px 20px; font-family: var(--font-cyber); font-size: 9px; color: var(--text); cursor: pointer; box-shadow: 4px 4px 0 var(--accent-pink); transition: all 0.2s; letter-spacing: 1px; }
+.page-tab.active { background: var(--accent-cyan); color: #000; transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--accent-pink); border-color: var(--accent-yellow); }
 
-.page-nav { display: flex; gap: 10px; padding: 0 1rem; margin-top: 2rem; justify-content: center; flex-wrap: wrap;}
-.page-tab { background: var(--bg); border: 3px solid var(--card-border); padding: 10px 15px; font-family: var(--font-retro); font-size: 9px; color: var(--text); cursor: pointer; box-shadow: 4px 4px 0 var(--card-border); transition: all 0.2s; line-height: 1.4;}
-.page-tab.active { background: var(--accent-1); color: #fff; transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--card-border); }
+.footer { text-align: center; padding: 3rem 1.5rem; font-family: var(--font-cyber); font-size: 9px; color: var(--text-muted); border-top: 2px dashed var(--card-border); margin-top: 3rem; line-height: 2; letter-spacing: 1px; }
 
-.footer { text-align: center; padding: 3rem 1.5rem; font-family: var(--font-retro); font-size: 9px; color: var(--text-muted); border-top: 2px dashed var(--card-border); margin-top: 3rem; line-height: 2;}
-
-.ig-float-btn { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: var(--accent-1); display: flex; align-items: center; justify-content: center; border: 3px solid var(--card-border); cursor: pointer; z-index: 9999; box-shadow: 4px 4px 0 var(--card-border); transition: all 0.2s; border-radius: 50%;}
-.ig-float-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 transparent; }
-.ig-float-btn svg { width: 24px; height: 24px; fill: #fff; }
+.ig-float-btn { position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; background: var(--accent-pink); display: flex; align-items: center; justify-content: center; border: 2px solid var(--card-border); cursor: pointer; z-index: 9999; box-shadow: 0 0 20px var(--accent-pink); transition: all 0.3s; border-radius: 50%; }
+.ig-float-btn:hover { transform: scale(1.15) rotate(15deg); box-shadow: 0 0 30px var(--accent-cyan); }
+.ig-float-btn svg { width: 26px; height: 26px; fill: #fff; }
 
 @media(max-width: 480px) {
   .input-row { flex-direction: column; align-items: stretch; }
-  .retro-btn { width: 100% !important; padding: 15px; margin: 5px 0;}
+  .cyber-btn { width: 100% !important; padding: 15px; margin: 5px 0; }
   .cat-header { flex-direction: column; align-items: center; text-align: center; }
   .welcome-pill { justify-content: center; text-align: center; }
   .theme-toggle-btn { margin-left: 0; margin-top: 5px; }
-  .retro-box { padding: 1.5rem 1rem; width: 95%; }
+  .cyber-box { padding: 1.8rem 1rem; width: 95%; }
 }
 </style>
 </head>
 <body>
 
-<div class="memphis-shapes">
-  <div class="shape circle"></div>
-  <div class="shape triangle"></div>
-  <div class="shape squiggle"></div>
-</div>
-
-<div class="synth-grid"></div>
+<div class="crt-overlay"></div>
+<div class="cyber-grid"></div>
+<div class="scanner-line"></div>
+<div class="cyber-particles" id="particleContainer"></div>
 
 <!-- LAUNCHER SCREEN (DEFAULT HOME) -->
 <div id="launcher-screen" class="screen-layer visible">
-  <div class="retro-box" style="max-width: 450px;">
-    <h2 class="launcher-title">SELECT MODE</h2>
-    <button class="retro-btn" onclick="launchArcade()" style="background: var(--accent-3); color: #000; font-size: 11px; padding: 16px; margin-bottom: 12px;">🎮 ARCADE & STORE</button>
-    <button class="retro-btn" onclick="launchChat()" style="background: var(--accent-2); color: #000; font-size: 11px; padding: 16px;">💬 CYBER CHAT</button>
+  <div class="cyber-box" style="max-width: 480px;">
+    <h2 class="glitch-title">SYSTEM INTERFACE v4.0</h2>
+    <p class="gate-sub" style="margin-bottom: 20px;">SELECT YOUR CYBERNETIC PATHWAY</p>
+    <button class="cyber-btn yellow" onclick="launchArcade()">⚡ ARCADE & STORE ⚡</button>
+    <button class="cyber-btn" onclick="launchTea()">☕ SECURE CYBER TEA</button>
   </div>
 </div>
 
 <!-- GATEWAY SCREEN (REFERRAL CODE / SKIP) -->
 <div id="gate" class="screen-layer">
-  <div class="retro-box">
-    <div class="lock-icon" id="gate-icon">🔒</div>
-    <div class="gate-title" id="gate-title">SYSTEM LOCKED</div>
-    <p class="gate-sub" id="gate-sub" style="margin-bottom:1.5rem;">ENTER PLAYER 1 REFERRAL CODE OR SKIP</p>
+  <div class="cyber-box">
+    <div class="lock-icon">🔒</div>
+    <div class="glitch-title" id="gate-title">SECURITY GATEWAY</div>
+    <p class="gate-sub" id="gate-sub">AUTHENTICATE ACCESS CODE OR BYPASS PROTOCOL</p>
     
     <div class="input-row" id="gate-input-area">
-      <input id="refInput" class="retro-input" type="text" placeholder="CODE..." autocomplete="off" />
-      <button class="retro-btn" id="enterBtn" onclick="checkCode()" style="margin:0; width:100px;">START</button>
+      <input id="refInput" class="cyber-input" type="text" placeholder="ACCESS CODE..." autocomplete="off" />
+      <button class="cyber-btn" id="enterBtn" onclick="checkCode()" style="margin:0; width:110px;">AUTH</button>
     </div>
 
     <div class="input-row" id="lb-input-area" style="display:none;">
-      <input id="lbInput" class="retro-input" type="text" placeholder="INITIALS..." maxlength="10" autocomplete="off" />
-      <button class="retro-btn" onclick="saveInitialsAndEnter()" style="margin:0; width:100px;">SAVE</button>
+      <input id="lbInput" class="cyber-input" type="text" placeholder="INITIALS..." maxlength="10" autocomplete="off" />
+      <button class="cyber-btn yellow" onclick="saveInitialsAndEnter()" style="margin:0; width:110px;">SAVE</button>
     </div>
     
-    <div id="errMsg">ERROR: PLAYER NOT FOUND</div>
+    <div id="errMsg" style="font-family:var(--font-cyber); font-size:10px; color:var(--accent-pink); margin-top:10px; display:none;">ACCESS DENIED: UNKNOWN ID</div>
     
-    <button class="retro-btn" onclick="skipToCatalog()" style="background: #333; border-color: #555; margin-top: 15px;">SKIP TO CATALOG</button>
-    <button class="retro-btn" onclick="returnToLauncher()" style="background: transparent; border-color: #333; color: var(--text-muted); margin-top: 5px;">BACK TO LAUNCHER</button>
+    <button class="cyber-btn pink" onclick="skipToCatalog()" style="margin-top: 15px;">BYPASS TO CATALOG</button>
+    <button class="cyber-btn" onclick="returnToLauncher()" style="background:transparent; border-color:#333; color:var(--text-muted); margin-top: 5px;">ABORT TO LAUNCHER</button>
   </div>
 </div>
 
 <!-- CHECKOUT SCREEN -->
 <div id="checkout-screen" class="screen-layer">
-  <div class="retro-box" style="margin: 20px auto; max-height: 90vh; overflow-y: auto;">
-    <div class="gate-title" style="color: var(--accent-3);">SECURE CHECKOUT</div>
+  <div class="cyber-box" style="margin: 20px auto; max-height: 90vh; overflow-y: auto;">
+    <div class="glitch-title" style="color: var(--accent-yellow);">SECURE TRANSACTION</div>
     
     <form id="orderForm" class="checkout-form">
-      <label>> FULL NAME *</label>
-      <input type="text" name="Full Name" class="retro-input" required placeholder="JOHN DOE" />
+      <label>> RECIPIENT NAME *</label>
+      <input type="text" name="Full Name" class="cyber-input" required placeholder="JOHN DOE" />
       
-      <label>> PHONE NUMBER *</label>
-      <input type="tel" name="Phone Number" class="retro-input" required placeholder="+8801XXXXXXXXX" />
+      <label>> COMM-LINK PHONE *</label>
+      <input type="tel" name="Phone Number" class="cyber-input" required placeholder="+8801XXXXXXXXX" />
       
-      <label>> DELIVERY ADDRESS *</label>
-      <textarea name="Delivery Address" class="retro-input" required placeholder="HOUSE, ROAD, DHAKA..." rows="3" style="resize:none; font-family: var(--font-main);"></textarea>
+      <label>> DESTINATION COORDINATES *</label>
+      <textarea name="Delivery Address" class="cyber-input" required placeholder="HOUSE, ROAD, DHAKA..." rows="3" style="resize:none;"></textarea>
       
-      <label>> SELECT PRODUCT COLOR *</label>
-      <select name="Product Color" id="form-color" class="retro-select" required>
+      <label>> HARDWARE COLOR *</label>
+      <select name="Product Color" id="form-color" class="cyber-select" required>
         <option value="White">White</option>
         <option value="Red">Red</option>
         <option value="Yellow">Yellow</option>
@@ -267,8 +345,8 @@ body {
         <option value="Black">Black</option>
       </select>
 
-      <label>> CHOOSE ADD-ONS *</label>
-      <select name="Add-ons" id="form-addons" class="retro-select" required>
+      <label>> MODULE UPGRADES *</label>
+      <select name="Add-ons" id="form-addons" class="cyber-select" required>
         <option value="Without SD card 1582">Without SD card 1582</option>
         <option value="With SD card 1994">With SD card 1994</option>
         <option value="With SD card + card reader 2100">With SD card + card reader 2100</option>
@@ -276,17 +354,17 @@ body {
         <option value="Flash without SD card 1999">Flash without SD card 1999</option>
       </select>
 
-      <label>> BRO CODE (OPTIONAL)</label>
-      <input type="text" name="BRO CODE" id="form-brocode" class="retro-input" placeholder="FOR 5% OFF & FREE DEL" />
+      <label>> PROTOCOL CODE (OPTIONAL)</label>
+      <input type="text" name="BRO CODE" id="form-brocode" class="cyber-input" placeholder="FOR 5% OFF & FREE DEL" />
 
       <label>> QUANTITY *</label>
-      <select name="Quantity" class="retro-select" required>
+      <select name="Quantity" class="cyber-select" required>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
       </select>
 
-      <label>> PREFERRED PAYMENT METHOD *</label>
+      <label>> PAYMENT GATEWAY *</label>
       <div class="radio-group">
         <label><input type="radio" name="Payment Method" value="Cash on Delivery (COD)" required onclick="toggleBkash(false)" checked> Cash on Delivery</label>
         <label><input type="radio" name="Payment Method" value="Bkash" required onclick="toggleBkash(true)"> Bkash</label>
@@ -294,74 +372,72 @@ body {
 
       <div id="bkash-field" class="bkash-info-box" style="display:none;">
         <div class="bkash-number">> SEND MONEY (PERSONAL): 01961515240</div>
-        <label style="margin-top: 4px;">> BKASH TRANSACTION ID *</label>
-        <input type="text" name="Transaction ID" id="trx-input" class="retro-input" placeholder="ENTER TRX ID..." />
+        <label style="margin-top: 4px;">> TRANSACTION HASH / TRX ID *</label>
+        <input type="text" name="Transaction ID" id="trx-input" class="cyber-input" placeholder="ENTER TRX ID..." />
       </div>
 
-      <label>> LEGAL AGREEMENT</label>
+      <label>> SYSTEM DIRECTIVES</label>
       <div class="tc-box">
-        <strong>1. ORDER MODIFICATION:</strong> We reserve the right to cancel, modify, change the order value, or delay shipments at our sole discretion.<br><br>
-        <strong>2. CASH ON DELIVERY (COD):</strong> All orders are strictly COD. We reserve the right to take legal action if a customer fails or refuses to receive their order upon delivery attempt.<br><br>
-        <strong>3. DAMAGES & LIABILITY:</strong> The customer is fully responsible for any damage occurring after successful delivery.<br><br>
-        <strong>4. STRICT 3-DAY WARRANTY:</strong> We provide a 3-day replacement warranty covering ONLY manufacturing defects. Claims must be submitted within exactly 3 days of receiving the order. Claims after 3 days are strictly not applicable.<br><br>
-        <strong>5. WARRANTY EXCLUSIONS:</strong> Screen-related issues and ANY physical damage are strictly NOT covered under the warranty policy.
+        <strong>1. ORDER MODIFICATION:</strong> We reserve rights to modify or delay transmittals at our discretion.<br><br>
+        <strong>2. COD PROTOCOL:</strong> All orders strictly COD. Non-receival liability enforced.<br><br>
+        <strong>3. 3-DAY WARRANTY:</strong> Hardware defects covered strictly for 72 hours post-delivery.
       </div>
       
-      <label class="checkbox-row"><input type="checkbox" required /> I have read and agree to the Privacy Policy.</label>
-      <label class="checkbox-row"><input type="checkbox" required /> I accept the Terms & Conditions outlined above, including the strict 3-day warranty limits and COD liability.</label>
+      <label class="checkbox-row"><input type="checkbox" required /> I agree to system privacy directives.</label>
+      <label class="checkbox-row"><input type="checkbox" required /> I accept terms, conditions, and warranty bounds.</label>
 
-      <button type="submit" id="submitOrderBtn" class="retro-btn" style="background: var(--accent-3); color: #000; font-size: 12px; margin-top: 15px;">CONFIRM ORDER</button>
-      <button type="button" class="retro-btn" onclick="cancelCheckout()" style="background: #333; border-color: #555;">CANCEL & RETURN</button>
+      <button type="submit" id="submitOrderBtn" class="cyber-btn yellow" style="font-size: 11px; margin-top: 15px;">EXECUTE TRANSMISSION</button>
+      <button type="button" class="cyber-btn" onclick="cancelCheckout()" style="background: #111; border-color: #444;">ABORT & RETURN</button>
     </form>
   </div>
 </div>
 
 <!-- SUCCESS STAGE CLEAR SCREEN -->
 <div id="success-screen" class="screen-layer">
-  <div class="retro-box" style="margin: 20px auto; padding: 4rem 1.5rem;">
-    <h2 class="gate-title blink-text" style="color: #0f0; font-size: 20px; text-shadow: 0 0 15px #0f0; margin-bottom: 25px;">STAGE CLEAR</h2>
-    <p class="gate-sub" style="color: #fff; font-size: 12px;">>> ORDER DATA TRANSMITTED <<</p>
+  <div class="cyber-box" style="margin: 20px auto; padding: 4rem 1.5rem;">
+    <h2 class="glitch-title" style="color: var(--accent-green); font-size: 22px; text-shadow: 0 0 20px var(--accent-green); margin-bottom: 25px;">MISSION ACCOMPLISHED</h2>
+    <p class="gate-sub" style="color: #fff; font-size: 11px;">>> DATA PACKET UPLOADED TO MAINFRAME <<</p>
     
-    <div style="margin: 30px 0; text-align: left; display: inline-block;">
-      <div class="stat-row">RANK: <span class="stat-val">S-CLASS</span></div>
-      <div class="stat-row">EXP GAINED: <span class="stat-val" style="color: var(--accent-3); text-shadow: 0 0 8px var(--accent-3);">+5000</span></div>
-      <div class="stat-row">STATUS: <span class="stat-val" style="color: var(--accent-1); text-shadow: 0 0 8px var(--accent-1);">DISPATCH PREP</span></div>
+    <div style="margin: 25px 0; text-align: left; display: inline-block;">
+      <div class="stat-row">SYSTEM RANK: <span class="stat-val">S-CLASS</span></div>
+      <div class="stat-row">CYBER EXP: <span class="stat-val" style="color: var(--accent-yellow);">+5000 XP</span></div>
+      <div class="stat-row">STATUS: <span class="stat-val" style="color: var(--accent-pink);">DISPATCH QUEUED</span></div>
     </div>
 
     <div class="score-tally" id="final-score">SCORE: 0000</div>
 
-    <button class="retro-btn" onclick="closeSuccessScreen()" style="background: var(--accent-3); color: #000; font-size: 12px; margin-top: 20px;">CONTINUE TO CATALOG</button>
+    <button class="cyber-btn yellow" onclick="closeSuccessScreen()" style="font-size: 11px; margin-top: 20px;">RETURN TO CATALOG</button>
   </div>
 </div>
 
-<!-- CYBER CHAT TERMINAL -->
+<!-- CYBER TEA TERMINAL -->
 <div id="chat-screen" class="screen-layer">
-  <div class="retro-box" style="width: 95%; max-width: 550px; padding: 1.5rem 1rem;">
-    <div class="gate-title" style="color: var(--accent-2); font-size: 14px;">⚡ CYBER CHAT TERMINAL ⚡</div>
+  <div class="cyber-box" style="width: 95%; max-width: 550px; padding: 1.8rem 1.2rem;">
+    <div class="glitch-title" style="color: var(--accent-cyan); font-size: 14px;">☕ SECURE CYBER TEA LOUNGE ☕</div>
     
-    <div id="chat-auth-box" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-      <input type="text" id="chat-user" class="retro-input" placeholder="USERNAME..." autocomplete="off" />
-      <input type="password" id="chat-pass" class="retro-input" placeholder="SECRET PIN / PASS..." autocomplete="off" />
-      <button class="retro-btn" onclick="authChat()" style="background: var(--accent-2); color: #000;">ENTER NETWORK</button>
-      <button class="retro-btn" onclick="returnToLauncher()" style="background: #333; border-color:#555;">BACK TO LAUNCHER</button>
+    <div id="chat-auth-box" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+      <input type="text" id="chat-user" class="cyber-input" placeholder="USERNAME..." autocomplete="off" />
+      <input type="password" id="chat-pass" class="cyber-input" placeholder="ACCESS PIN..." autocomplete="off" />
+      <button class="cyber-btn yellow" onclick="authTea()">BREW CONNECTION</button>
+      <button class="cyber-btn" onclick="returnToLauncher()" style="background: #111; border-color:#444;">DISCONNECT</button>
     </div>
 
     <div id="chat-main-box" style="display: none; flex-direction: column; gap: 10px; margin-top: 15px;">
-      <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: var(--font-retro); color: var(--accent-3);">
-        <span>USER: <span id="active-chat-user" style="color:#0f0;"></span></span>
-        <span>CHANNEL: <input id="chat-target" value="Global" style="background:none; border:none; color:var(--accent-1); font-family:var(--font-retro); width:70px; text-align:right; outline:none;" /></span>
+      <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: var(--font-cyber); color: var(--accent-yellow);">
+        <span>OPERATOR: <span id="active-chat-user" style="color:var(--accent-green);"></span></span>
+        <span>TABLE / NODE: <input id="chat-target" value="Global" style="background:none; border:none; color:var(--accent-cyan); font-family:var(--font-cyber); width:80px; text-align:right; outline:none;" /></span>
       </div>
 
-      <div id="chat-logs" style="height: 220px; overflow-y: auto; background: #000; border: 2px dashed var(--accent-2); padding: 10px; font-family: monospace; font-size: 11px; text-align: left; display: flex; flex-direction: column; gap: 6px;">
-        <div style="color: #666;">>> CONNECTED TO SECURE MESH NETWORK...</div>
+      <div id="chat-logs" style="height: 230px; overflow-y: auto; background: rgba(0,0,0,0.9); border: 2px dashed var(--accent-cyan); padding: 12px; font-family: var(--font-main); font-size: 12px; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+        <div style="color: var(--text-muted);">>> ENCRYPTED TEA MESH ACTIVE...</div>
       </div>
 
       <div class="input-row" style="margin-bottom: 0;">
-        <input type="text" id="chat-msg" class="retro-input" placeholder="TYPE MESSAGE..." autocomplete="off" />
-        <button class="retro-btn" onclick="sendChatMessage()" style="margin:0; width: 80px; background: var(--accent-1);">SEND</button>
+        <input type="text" id="chat-msg" class="cyber-input" placeholder="TRANSMIT TEA..." autocomplete="off" />
+        <button class="cyber-btn yellow" onclick="sendChatMessage()" style="margin:0; width: 90px;">SPILL</button>
       </div>
       
-      <button class="retro-btn" onclick="returnToLauncher()" style="background: #333; border-color:#555; margin-top: 5px;">DISCONNECT</button>
+      <button class="cyber-btn" onclick="returnToLauncher()" style="background: #111; border-color:#444; margin-top: 5px;">TERMINATE SESSION</button>
     </div>
   </div>
 </div>
@@ -369,11 +445,11 @@ body {
 <!-- CATALOG SECTION -->
 <div id="catalog">
   <header class="cat-header">
-    <div class="header-logo" onclick="returnToLauncher()">SILLY SOCKS</div>
+    <div class="header-logo" onclick="returnToLauncher()">CYBER-STORE // SILLY SOCKS</div>
     <div class="welcome-pill">
-      PLAYER 1: <span id="broName" style="margin: 0 5px;">???</span>
-      <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">[ DAY MODE ]</button>
-      <button class="theme-toggle-btn" onclick="returnToLauncher()" style="border-color: var(--accent-3); color: var(--accent-3); margin-left:5px;">[ LAUNCHER ]</button>
+      OPERATOR: <span id="broName" style="margin: 0 5px; color:var(--accent-green);">???</span>
+      <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">[ HUD MODE ]</button>
+      <button class="theme-toggle-btn" onclick="returnToLauncher()" style="border-color: var(--accent-yellow); color: var(--accent-yellow); margin-left:5px;">[ HOME ]</button>
     </div>
   </header>
 
@@ -382,26 +458,26 @@ body {
   </div>
   
   <div class="disc-bar">
-    ⚡ 5% OFF + FREE SHIPPING UNLOCKED ⚡ DM ON IG FOR 10% OFF ⚡ VIP ACCESS GRANTED
+    ⚡ 5% OFF + FREE SHIPPING UNLOCKED ⚡ DECRYPT 10% OFF VIA IG ⚡ SECURE VIP ACCESS
   </div>
   
   <div class="page-nav">
-    <div class="page-tab active" id="tab1" onclick="showPage(1)">LVL 1: THE CLASSICS</div>
-    <div class="page-tab" id="tab2" onclick="showPage(2)">LVL 2: FLASH GEAR</div>
+    <div class="page-tab active" id="tab1" onclick="showPage(1)">TIER 1: CLASSICS</div>
+    <div class="page-tab" id="tab2" onclick="showPage(2)">TIER 2: FLASH GEAR</div>
   </div>
   
   <div class="cat-body" id="page1Body">
-    <div class="section-label">> THE CLASSICS DROP</div>
+    <div class="section-label">> CLASSIC DROPS</div>
     <div id="camGrid" class="cam-grid"></div>
   </div>
   
   <div class="cat-body" id="page2Body" style="display:none;">
-    <div class="section-label">> NIGHT VISION UPGRADES</div>
+    <div class="section-label">> HIGH-VOLTAGE UPGRADES</div>
     <div id="camGrid2" class="cam-grid"></div>
   </div>
   
   <div class="footer">
-    DM US ON IG FOR INQUIRIES<br><br>ALL SECURED ORDERS ARE FINAL
+    SECURE CHANNELS OPEN VIA INSTAGRAM<br><br>ALL TRANSMITTED ORDERS ARE FINAL
   </div>
 </div>
 
@@ -415,7 +491,19 @@ body {
 let audioCtx;
 let appliedBroCode = "";
 
-// Initialize Audio Context on first interaction
+function createParticles() {
+  const container = document.getElementById('particleContainer');
+  for (let i = 0; i < 35; i++) {
+    let p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (Math.random() * 5 + 3) + 's';
+    p.style.animationDelay = (Math.random() * 5) + 's';
+    container.appendChild(p);
+  }
+}
+createParticles();
+
 function initAudio() {
   if (!audioCtx) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -424,7 +512,7 @@ function initAudio() {
   }
 }
 
-function playTone(freq, type, duration, vol = 0.05) {
+function playTone(freq, type, duration, vol = 0.04) {
   initAudio();
   if (!audioCtx || audioCtx.state !== 'running') return;
   const osc = audioCtx.createOscillator();
@@ -437,17 +525,16 @@ function playTone(freq, type, duration, vol = 0.05) {
   osc.start(); osc.stop(audioCtx.currentTime + duration);
 }
 
-function soundClick() { playTone(600, 'square', 0.1); }
-function soundBot() { playTone(400, 'square', 0.1, 0.03); }
-function soundError() { playTone(150, 'sawtooth', 0.4, 0.1); }
+function soundClick() { playTone(800, 'square', 0.08); }
+function soundError() { playTone(120, 'sawtooth', 0.3, 0.08); }
 function soundWin() {
-  setTimeout(() => playTone(440, 'sine', 0.2), 0);
-  setTimeout(() => playTone(554, 'sine', 0.2), 150);
-  setTimeout(() => playTone(659, 'sine', 0.4), 300);
-  setTimeout(() => playTone(880, 'sine', 0.6), 450);
+  setTimeout(() => playTone(523.25, 'sine', 0.15), 0);
+  setTimeout(() => playTone(659.25, 'sine', 0.15), 120);
+  setTimeout(() => playTone(783.99, 'sine', 0.15), 240);
+  setTimeout(() => playTone(1046.50, 'sine', 0.4), 360);
 }
 function soundHack() {
-  for(let i=0; i<15; i++) { setTimeout(() => playTone(400 + (i*50), 'square', 0.05, 0.03), i*60); }
+  for(let i=0; i<12; i++) { setTimeout(() => playTone(500 + (i*80), 'sawtooth', 0.04, 0.02), i*40); }
 }
 
 // --- LAUNCHER NAVIGATION ---
@@ -463,7 +550,7 @@ function launchArcade() {
   }, 400);
 }
 
-function launchChat() {
+function launchTea() {
   soundClick();
   let launcher = document.getElementById('launcher-screen');
   launcher.classList.remove('visible');
@@ -479,7 +566,6 @@ function returnToLauncher() {
   soundClick();
   if (chatPollInterval) clearInterval(chatPollInterval);
   
-  // Hide all screens
   ['gate', 'checkout-screen', 'success-screen', 'chat-screen', 'catalog'].forEach(id => {
     let el = document.getElementById(id);
     if(el) {
@@ -520,7 +606,7 @@ function updateLeaderboard(name) {
   localStorage.setItem('sillySocksLB', JSON.stringify(localLb));
   let combined = [...localLb, ...globalLb];
   let uniqueLb = [...new Set(combined)].slice(0, 10);
-  let tickerHTML = "👑 ARCADE CHAMPIONS: ";
+  let tickerHTML = "👑 CYBER CHAMPIONS: ";
   tickerHTML += uniqueLb.map((n, i) => `#${i+1} ${n}`).join(" ⚡ ") + " 👑";
   document.getElementById('lbTickerContainer').innerHTML = `<span>${tickerHTML}</span><span>${tickerHTML}</span>`;
 }
@@ -543,7 +629,6 @@ function checkCode() {
     document.getElementById('gate-title').innerText = "ACCESS GRANTED";
     document.getElementById('gate-title').classList.add('hacked-text');
     document.getElementById('gate-icon').innerText = "🔓";
-    document.getElementById('gate-icon').classList.add('hacked-icon');
     setTimeout(() => unlockCatalog(prettyList[foundIndex]), 1200);
   } else {
     soundError();
@@ -553,7 +638,7 @@ function checkCode() {
 
 function saveInitialsAndEnter() {
   soundClick();
-  let name = document.getElementById('lbInput').value || "CHAMPION";
+  let name = document.getElementById('lbInput').value || "OPERATOR";
   unlockCatalog(name.toUpperCase());
 }
 
@@ -610,9 +695,9 @@ function animateScore() {
   let scoreObj = document.getElementById("final-score");
   let score = 0, target = 9999;
   let interval = setInterval(() => {
-    score += Math.floor(Math.random() * 500) + 100;
-    if(score >= target) { score = target; clearInterval(interval); playTone(880, 'sine', 0.5); }
-    else { playTone(400 + (score % 200), 'square', 0.02, 0.01); }
+    score += Math.floor(Math.random() * 600) + 150;
+    if(score >= target) { score = target; clearInterval(interval); soundWin(); }
+    else { playTone(400 + (score % 300), 'square', 0.02, 0.01); }
     scoreObj.innerText = "SCORE: " + score.toString().padStart(4, '0');
   }, 30);
 }
@@ -627,16 +712,16 @@ function closeSuccessScreen() {
   }, 400);
 }
 
-// --- Cyber Chat Logic ---
+// --- Cyber Tea Logic ---
 let currentUser = "";
 let chatPollInterval = null;
 const scriptURL = "https://script.google.com/macros/s/AKfycbxr2yW5v4-btLCxtZBPZ0oFeJUI4xWGGI5neySlAAjJMCbTcDl-fI5JeUe_khm5xVot/exec";
 
-function authChat() {
+function authTea() {
   soundClick();
   let user = document.getElementById('chat-user').value.trim();
   let pass = document.getElementById('chat-pass').value.trim();
-  if (!user || !pass) { alert("ENTER USERNAME & PASSWORD"); return; }
+  if (!user || !pass) { alert("ENTER USERNAME & PASS"); return; }
 
   let params = new URLSearchParams({ action: "chat_auth", username: user, password: pass });
   fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })
@@ -679,8 +764,8 @@ function fetchMessages() {
     messages.forEach(m => {
       let line = document.createElement('div');
       let isMe = m.sender.toUpperCase() === currentUser;
-      line.style.color = isMe ? "var(--accent-2)" : "var(--accent-3)";
-      line.innerHTML = `<span style="color:#666;">[${m.time}]</span> <strong>${m.sender}:</strong> ${m.text}`;
+      line.style.color = isMe ? "var(--accent-cyan)" : "var(--accent-yellow)";
+      line.innerHTML = `<span style="color:#555;">[${m.time}]</span> <strong>${m.sender}:</strong> ${m.text}`;
       logs.appendChild(line);
     });
     logs.scrollTop = logs.scrollHeight;
@@ -711,7 +796,7 @@ document.getElementById("orderForm").addEventListener("submit", function(e) {
       successScreen.style.display = "flex";
       setTimeout(() => { successScreen.classList.add('visible'); animateScore(); }, 50);
     }, 400);
-    btn.innerText = "CONFIRM ORDER";
+    btn.innerText = "EXECUTE TRANSMISSION";
     btn.style.pointerEvents = "auto";
     btn.style.opacity = "1";
     document.getElementById("orderForm").reset();
@@ -719,7 +804,7 @@ document.getElementById("orderForm").addEventListener("submit", function(e) {
   }).catch(() => {
     soundError();
     alert("TRANSMISSION ERROR.");
-    btn.innerText = "CONFIRM ORDER";
+    btn.innerText = "EXECUTE TRANSMISSION";
     btn.style.pointerEvents = "auto";
     btn.style.opacity = "1";
   });
@@ -732,10 +817,10 @@ function toggleTheme() {
   const btn = document.getElementById("themeToggle");
   if (body.getAttribute("data-theme") === "light") {
     body.removeAttribute("data-theme");
-    btn.textContent = "[ DAY MODE ]";
+    btn.textContent = "[ HUD MODE ]";
   } else {
     body.setAttribute("data-theme", "light");
-    btn.textContent = "[ NIGHT MODE ]";
+    btn.textContent = "[ DARK MODE ]";
   }
 }
 
@@ -750,12 +835,12 @@ function getPriceHTML(isFlash, isWithSD) {
 }
 
 var camData = [
-  { n:"Yellow 1985", v:"Sunny 80s vibes", i:"c1.jpg", c:"Yellow" }, 
+  { n:"Yellow 1985", v:"Sunny cyber vibes", i:"c1.jpg", c:"Yellow" }, 
   { n:"Black Retro",  v:"Neon noir aesthetic", i:"c2.jpg", c:"Black" },
   { n:"Blue Mini", v:"Cool coastal feel", i:"c3.jpg", c:"Blue" }, 
   { n:"Street Red", v:"Bold streetwear", i:"c4.jpg", c:"Red" },
   { n:"Minimal White", v:"Clean & modern", i:"c5.jpg", c:"White" }, 
-  { n:"Green Personality", v:"90s personality", i:"c6.jpg", c:"Green" }
+  { n:"Green Personality", v:"Matrix persona", i:"c6.jpg", c:"Green" }
 ];
 var camData2 = [
   { n:"1988 Orange Flash", v:"Retro vintage stripes", i:"f1.jpg", c:"Yellow" }, 
@@ -774,7 +859,7 @@ function renderGrid(dataArray, gridId, prefix) {
     card.innerHTML =
       '<div class="img-wrapper">' +
         '<div class="stock-tag">1 UP</div>' +
-        '<img src="' + c.i + '" class="cam-img" alt="' + c.n + '" onerror="this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'300\\\' height=\\\'200\\\'><rect width=\\\'100%\\\' height=\\\'100%\\\' fill=\\\'#333\\\'/><text x=\\\'50%\\\' y=\\\'50%\\\' font-family=\\\'monospace\\\' font-size=\\\'14\\\' fill=\\\'#fff\\\' dominant-baseline=\\\'middle\\\' text-anchor=\\\'middle\\\'>IMG MISSING</text></svg>\'" />' +
+        '<img src="' + c.i + '" class="cam-img" alt="' + c.n + '" onerror="this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'300\\\' height=\\\'200\\\'><rect width=\\\'100%\\\' height=\\\'100%\\\' fill=\\\'#111\\\'/><text x=\\\'50%\\\' y=\\\'50%\\\' font-family=\\\'monospace\\\' font-size=\\\'14\\\' fill=\\\'#00f0ff\\\' dominant-baseline=\\\'middle\\\' text-anchor=\\\'middle\\\'>SYS_IMG_404</text></svg>\'" />' +
       '</div>' +
       '<div class="cam-info">' +
         '<div class="cam-name">' + c.n + '</div>' +
@@ -785,7 +870,7 @@ function renderGrid(dataArray, gridId, prefix) {
           '<label class="toggle-opt"><input type="radio" id="sdopt_' + prefix + x + '_without" name="sdopt' + prefix + x + '" value="without" onchange="updatePrice(this, \'' + prefix + x + '\'); soundClick();"> [ ] NO SD CARD</label>' +
         '</div>' +
         '<div class="price-row" id="priceRow' + prefix + x + '">' + getPriceHTML(isFlash, true) + '</div>' +
-        '<button class="buy-btn" onclick="openCheckout(\'' + c.c + '\', ' + isFlash + ', document.getElementById(\'sdopt_' + prefix + x + '_with\').checked)">SECURE ITEM</button>' +
+        '<button class="cyber-btn yellow" onclick="openCheckout(\'' + c.c + '\', ' + isFlash + ', document.getElementById(\'sdopt_' + prefix + x + '_with\').checked)">SECURE HARDWARE</button>' +
       '</div>';
     grid.appendChild(card);
   }
