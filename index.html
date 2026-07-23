@@ -79,8 +79,8 @@ body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: transparent; z-index: 5000; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
-#launcher-screen, #gate, #checkout-screen, #success-screen, #chat-screen { display: none; opacity: 0; transform: scale(0.92) translateY(25px); filter: blur(6px); }
-#launcher-screen.visible, #gate.visible, #checkout-screen.visible, #success-screen.visible, #chat-screen.visible { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+#launcher-screen, #checkout-screen, #success-screen, #chat-screen { display: none; opacity: 0; transform: scale(0.92) translateY(25px); filter: blur(6px); }
+#launcher-screen.visible, #checkout-screen.visible, #success-screen.visible, #chat-screen.visible { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 
 #launcher-screen { display: flex; opacity: 1; transform: scale(1); filter: blur(0); }
 
@@ -142,9 +142,6 @@ body {
 }
 
 .input-row { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; }
-.lock-icon { font-size: 45px; margin-bottom: 15px; filter: drop-shadow(0 0 15px var(--accent-pink)); animation: floatIcon 3s ease-in-out infinite alternate; }
-@keyframes floatIcon { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); filter: drop-shadow(0 0 25px var(--accent-cyan)); } }
-
 .gate-sub { font-size: 11px; font-family: var(--font-main); color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8; letter-spacing: 1px; font-weight: 700; }
 
 /* --- CHECKOUT SPECIFICS --- */
@@ -248,30 +245,6 @@ body {
     <button class="cyber-btn yellow" onclick="launchArcade()">⚡ ARCADE & STORE ⚡</button>
     <button class="cyber-btn" onclick="launchTea()">☕ SECURE CYBER TEA</button>
     <button class="cyber-btn pink" onclick="toggleTheme()" style="margin-top: 15px;">🌓 TOGGLE THEME MODE</button>
-  </div>
-</div>
-
-<!-- GATEWAY SCREEN (REFERRAL CODE / SKIP) -->
-<div id="gate" class="screen-layer">
-  <div class="cyber-box">
-    <div class="lock-icon">🔒</div>
-    <div class="glitch-title" id="gate-title">SECURITY GATEWAY</div>
-    <p class="gate-sub" id="gate-sub">AUTHENTICATE ACCESS CODE OR BYPASS PROTOCOL</p>
-    
-    <div class="input-row" id="gate-input-area">
-      <input id="refInput" class="cyber-input" type="text" placeholder="ACCESS CODE..." autocomplete="off" />
-      <button class="cyber-btn" id="enterBtn" onclick="checkCode()" style="margin:0; width:110px;">AUTH</button>
-    </div>
-
-    <div class="input-row" id="lb-input-area" style="display:none;">
-      <input id="lbInput" class="cyber-input" type="text" placeholder="INITIALS..." maxlength="10" autocomplete="off" />
-      <button class="cyber-btn yellow" onclick="saveInitialsAndEnter()" style="margin:0; width:110px;">SAVE</button>
-    </div>
-    
-    <div id="errMsg" style="font-family:var(--font-cyber); font-size:10px; color:var(--accent-pink); margin-top:10px; display:none; font-weight:700;">ACCESS DENIED: UNKNOWN ID</div>
-    
-    <button class="cyber-btn pink" onclick="skipToCatalog()" style="margin-top: 15px;">BYPASS TO CATALOG</button>
-    <button class="cyber-btn" onclick="returnToLauncher()" style="background:transparent; border-color:var(--text-muted); color:var(--text); margin-top: 5px;">ABORT TO LAUNCHER</button>
   </div>
 </div>
 
@@ -409,7 +382,7 @@ body {
   <header class="cat-header">
     <div class="header-logo" onclick="returnToLauncher()">CYBER-STORE // SILLY SOCKS</div>
     <div class="welcome-pill">
-      OPERATOR: <span id="broName" style="margin: 0 5px; color:var(--accent-green);">???</span>
+      OPERATOR: <span id="broName" style="margin: 0 5px; color:var(--accent-green);">OPERATOR</span>
       <button class="theme-toggle-btn" onclick="toggleTheme()">[ THEME ]</button>
       <button class="theme-toggle-btn" onclick="returnToLauncher()" style="border-color: var(--accent-yellow); color: var(--accent-yellow); margin-left:5px;">[ HOME ]</button>
     </div>
@@ -661,16 +634,18 @@ function drawDynamicBackground() {
 drawDynamicBackground();
 
 
-// --- LAUNCHER NAVIGATION ---
+// --- LAUNCHER NAVIGATION (Bypasses Auth Gateway Straight to Store) ---
 function launchArcade() {
   soundClick();
   let launcher = document.getElementById('launcher-screen');
   launcher.classList.remove('visible');
   setTimeout(() => {
     launcher.style.display = 'none';
-    let gateScreen = document.getElementById('gate');
-    gateScreen.style.display = 'flex';
-    setTimeout(() => gateScreen.classList.add('visible'), 50);
+    let catalogScreen = document.getElementById('catalog');
+    catalogScreen.style.display = 'block';
+    document.body.style.overflowY = 'auto';
+    renderLeaderboard();
+    setTimeout(() => catalogScreen.classList.add('visible'), 50);
   }, 400);
 }
 
@@ -690,7 +665,7 @@ function returnToLauncher() {
   soundClick();
   if (chatPollInterval) clearInterval(chatPollInterval);
   
-  ['gate', 'checkout-screen', 'success-screen', 'chat-screen', 'catalog'].forEach(id => {
+  ['checkout-screen', 'success-screen', 'chat-screen', 'catalog'].forEach(id => {
     let el = document.getElementById(id);
     if(el) {
       el.classList.remove('visible');
@@ -704,29 +679,15 @@ function returnToLauncher() {
   setTimeout(() => launcher.classList.add('visible'), 50);
 }
 
-const gate = document.getElementById('gate');
 const catalog = document.getElementById('catalog');
 const checkoutScreen = document.getElementById('checkout-screen');
 const successScreen = document.getElementById('success-screen');
 
-function skipToCatalog() {
-  soundClick();
-  gate.classList.remove('visible');
-  setTimeout(() => {
-    gate.style.display = "none";
-    catalog.style.display = "block";
-    document.body.style.overflowY = 'auto';
-    document.getElementById("broName").textContent = "GUEST";
-    renderLeaderboard();
-    setTimeout(() => catalog.classList.add("visible"), 50);
-  }, 400);
-}
-
-// --- Leaderboard & Gate ---
+// --- Leaderboard ---
 function updateLeaderboard(name) {
   let localLb = JSON.parse(localStorage.getItem('sillySocksLB') || '[]');
   let globalLb = ["SHIHAB", "SIAM", "ABID", "MADDIE", "MAMUN"];
-  if(name && name !== "GUEST") localLb.unshift(name.toUpperCase());
+  if(name && name !== "OPERATOR") localLb.unshift(name.toUpperCase());
   localStorage.setItem('sillySocksLB', JSON.stringify(localLb));
   let combined = [...localLb, ...globalLb];
   let uniqueLb = [...new Set(combined)].slice(0, 10);
@@ -735,47 +696,6 @@ function updateLeaderboard(name) {
   document.getElementById('lbTickerContainer').innerHTML = `<span>${tickerHTML}</span><span>${tickerHTML}</span>`;
 }
 function renderLeaderboard() { updateLeaderboard(); }
-
-var allowed = "mafruha|siam|abid|authai|rifah|fatima|azha|namira|maddie|nafisa|nayla|faysol|labby|mamun|sayemrohitkarmakar|nafisalubabaetu|mirzaabdulkhaled|namiraahmedshams|ishmamalam|farhanmasud|aunu|labbyahsan|jarinsubahshifa|nafisanoor|sabilaanjum|miswaralam|abdullahaljawad|tasin|arshan|ahnaf";
-var pretty   = "Mafruha|Siam|Abid|Authai|Rifah|Fatima|Azha|Namira|Maddie|Nafisa|Nayla|Faysol|Labby|Mamun|Sayem Rohit Karmakar|Nafisa Lubaba Etu|Mirza Abdul Khaled|Namira Ahmed Shams|Ishmam Alam|Farhan Masud|Aunu|Labby Ahsan|Jarin Subah Shifa|Nafisa Noor|Sabila Anjum|Miswar Alam|Abdullah Al Jawad|Tasin|Arshan|Ahnaf";
-var allowedList = allowed.split("|");
-var prettyList  = pretty.split("|");
-
-function checkCode() {
-  soundClick();
-  var val = document.getElementById("refInput").value.toLowerCase().trim();
-  var foundIndex = allowedList.indexOf(val);
-  var errMsg = document.getElementById("errMsg");
-  if(foundIndex > -1) {
-    errMsg.style.display = "none";
-    soundHack();
-    appliedBroCode = val.toUpperCase(); 
-    document.getElementById('gate-title').innerText = "ACCESS GRANTED";
-    document.getElementById('gate-icon').innerText = "🔓";
-    setTimeout(() => unlockCatalog(prettyList[foundIndex]), 1200);
-  } else {
-    soundError();
-    errMsg.style.display = "block";
-  }
-}
-
-function saveInitialsAndEnter() {
-  soundClick();
-  let name = document.getElementById('lbInput').value || "OPERATOR";
-  unlockCatalog(name.toUpperCase());
-}
-
-function unlockCatalog(playerName) {
-  gate.classList.remove('visible');
-  setTimeout(() => {
-    gate.style.display = "none";
-    catalog.style.display = "block";
-    document.body.style.overflowY = 'auto';
-    document.getElementById("broName").textContent = playerName;
-    renderLeaderboard();
-    setTimeout(() => catalog.classList.add("visible"), 50);
-  }, 400);
-}
 
 // --- Checkout & Success ---
 function openCheckout(itemColor, isFlash, isWithSD) {
